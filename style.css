@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(#ffc0f3, #fff1f8);
+  font-family: 'Pacifico', cursive;
+  overflow: hidden;
+  position: relative;
+}
+
+.container {
+  text-align: center;
+  padding: 100px 20px;
+  color: #7e2c91;
+}
+
+h1 {
+  font-size: 3em;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px #fff;
+}
+
+.mensaje {
+  font-size: 1.5em;
+  max-width: 600px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 10px #fcb0ff;
+}
+
+.kuromi, .mymelody {
+  width: 100px;
+  position: absolute;
+  top: 20px;
+}
+
+.kuromi {
+  left: 20px;
+}
+
+.mymelody {
+  right: 20px;
+}
+
+.button-link {
+  display: inline-block;
+  background-color: #ff85c1;
+  color: white;
+  text-decoration: none;
+  padding: 15px 30px;
+  font-size: 1.5em;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 0 10px #ffb6f0;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 30px;
+  user-select: none;
+}
+
+.button-link:hover {
+  background-color: #ff4ca8;
+  transform: scale(1.05);
+}
+
+/* Ajustes responsivos para texto y botón */
+@media (max-width: 600px) {
+  .container {
+    padding: 60px 15px;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  .mensaje {
+    font-size: 1.2em;
+    max-width: 90%;
+  }
+
+  .button-link {
+    font-size: 1.2em;
+    padding: 12px 25px;
+  }
+
+  .kuromi,
+  .mymelody {
+    width: 70px;
+  }
+}

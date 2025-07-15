@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>💖 Atrapa los Corazones</title>
+  <link rel="stylesheet" href="game-style.css" />
+  <style>
+    /* Para ocultar por defecto el contenedor centrado de globos */
+    #balloon-center-container.hidden {
+      display: none;
+    }
+    /* Centrar el mensaje y el globo verticalmente en columna */
+    #balloon-center-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 1000;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    #balloon-center {
+      font-size: 80px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    #balloon-center.pop {
+      animation: popAnim 0.6s forwards;
+      cursor: default;
+    }
+    #balloon-message {
+      font-size: 20px;
+      color: #d14d99;
+      font-weight: bold;
+      max-width: 300px;
+    }
+    @keyframes popAnim {
+      0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(2) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <h1>🎮 ¡Atrapa los Corazones!</h1>
+    <p>Usa las flechas ⬅️ ➡️ o los botones para mover a Kuromi 💖</p>
+    <div id="score">Puntos: 0</div>
+    <div id="player"></div>
+    <div id="controls" class="mobile-only">
+      <button onclick="moveLeft()">⬅️</button>
+      <button onclick="moveRight()">➡️</button>
+    </div>
+  </div>
+
+  <!-- Contenedor centrado para globos y leyenda -->
+  <div id="balloon-center-container" class="hidden">
+    <div id="balloon-message"></div>
+    <div id="balloon-center">🎈</div>
+  </div>
+
+  <script>
+    const player = document.getElementById("player");
+    const game = document.getElementById("game");
+    const scoreDisplay = document.getElementById("score");
+
+    let score = 0;
+    let gameOver = false;
+
+    // Movimiento teclado
+    document.addEventListener("keydown", function (e) {
+      if (gameOver) return;
+      const left = parseInt(window.getComputedStyle(player).getPropertyValue("left"));
+      if (e.key === "ArrowLeft" && left > 0) {
+        player.style.left = left - 20 + "px";
+      } else if (
+        e.key === "ArrowRight" &&
+        left < game.clientWidth - player.clientWidth
+      ) {
+        player.style.left = left + 20 + "px";
+      }
+    });
+
+    // Movimiento táctil
+    function moveLeft() {
+      if (gameOver) return;
+      const left = parseInt(window.getComputedStyle(player).getPropertyValue("left"));
+      if (left > 0) {
+        player.style.left = left - 20 + "px";
+      }
+    }
+
+    function moveRight() {
+      if (gameOver) return;
+      const left = parseInt(window.getComputedStyle(player).getPropertyValue("left"));
+      if (left < game.clientWidth - player.clientWidth) {
+        player.style.left = left + 20 + "px";
+      }
+    }
+
+    // Crear corazones cayendo
+    function createHeart() {
+      if (gameOver) return;
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.floor(Math.random() * (game.clientWidth - 30)) + "px";
+      game.appendChild(heart);
+
+      let fallInterval = setInterval(() => {
+        let heartTop = parseInt(window.getComputedStyle(heart).getPropertyValue("top"));
+        let playerLeft = parseInt(window.getComputedStyle(player).getPropertyValue("left"));
+        let heartLeft = parseInt(window.getComputedStyle(heart).getPropertyValue("left"));
+
+        if (
+          heartTop > game.clientHeight - 100 &&
+          heartLeft > playerLeft - 40 &&
+          heartLeft < playerLeft + player.clientWidth
+        ) {
+          score++;
+          scoreDisplay.textContent = "Puntos: " + score;
+          heart.remove();
+          clearInterval(fallInterval);
+
+          if (score === 23) {
+            endGameWithBalloons();
+          }
+        }
+
+        if (heartTop > game.clientHeight) {
+          heart.remove();
+          clearInterval(fallInterval);
+        }
+
+        heart.style.top = heartTop + 4 + "px";
+      }, 20);
+    }
+
+    setInterval(createHeart, 800);
+
+    // Mostrar globos y leyenda al ganar
+    function endGameWithBalloons() {
+      gameOver = true;
+
+      const balloonContainer = document.getElementById("balloon-center-container");
+      const balloon = document.getElementById("balloon-center");
+      const message = document.getElementById("balloon-message");
+
+      const wishes = [
+        "Felicidad infinita 🎉",
+        "Éxito en todo ✨",
+        "Amor verdadero 💖",
+        "Salud siempre 💪",
+        "Aventuras nuevas 🌍",
+        "Risas contagiosas 😂",
+        "Sueños cumplidos 🌟",
+        "Paz interior 🧘‍♀️",
+        "Magia en tu vida 🪄",
+        "Amistad eterna 🫂",
+        "Alegría sin fin 😄",
+        "Confianza plena 💎",
+        "Brillo propio ✨",
+        "Ternura diaria 🐰",
+        "Caminos bonitos 🚶‍♀️",
+        "Mil abrazos 🤗",
+        "Días hermosos 🌈",
+        "Inspiración pura 🎨",
+        "Todo tuyo 💝",
+        "Más aventuras 💼",
+        "Tiempo de calidad ⏳",
+        "Detalles mágicos 🪷",
+        "Un año inolvidable 🎂"
+      ];
+
+      let index = 0;
+
+      balloonContainer.classList.remove("hidden");
+      message.textContent = "🎁 ¡Rómpelos y sabrás mis 23 deseos! 🎁";
+      balloon.textContent = "🎈";
+      balloon.classList.remove("pop");
+
+      function showNextBalloon() {
+        if (index >= wishes.length) {
+          // Fin del juego: ocultar globo y mostrar mensaje final
+          balloon.textContent = "";
+          message.textContent = "🎉 ¡Muchas felicidades! Disfruta tu día al máximo 🎉";
+          balloon.onclick = null; // Desactivar clic
+          return;
+        }
+
+        balloon.classList.remove("pop");
+        balloon.textContent = "🎈";
+
+        // La leyenda solo aparece antes del primer globo, no en cada globo:
+        if (index === 0) {
+          message.textContent = "🎁 ¡Rómpelos y sabrás mis 23 deseos! 🎁";
+        } else {
+          message.textContent = "";
+        }
+
+        balloon.onclick = () => {
+          balloon.classList.add("pop");
+          balloon.textContent = "💥";
+          message.textContent = wishes[index];
+          index++;
+          setTimeout(showNextBalloon, 1000);
+        };
+      }
+
+      showNextBalloon();
+    }
+  </script>
+
+</body>
+</html>
